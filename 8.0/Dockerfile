@@ -38,7 +38,6 @@ RUN apt-get update &&  \
     apt-get upgrade -y &&  \
     apt-get -o Dpkg::Options::='--force-confnew' install locales -y
 
-# Comment out possible uncommented locales before proceeding.
 # Uncomment the necessary locales (LOCALES_DEF)
 
 RUN set -- junk $LOCALES_DEF  \
@@ -57,6 +56,7 @@ RUN pip install http://labs.libre-entreprise.org/frs/download.php/897/pyxmlsec-0
 RUN git clone https://github.com/Trust-Code/PySPED.git /tmp/pysped
 WORKDIR /tmp/pysped
 RUN python setup.py install
+
 # Install Odoo
 ENV ODOO_VERSION 8.0
 ENV ODOO_RELEASE latest
@@ -68,10 +68,12 @@ RUN set -x; \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
+#brazilian localization
 RUN git clone https://github.com/oca/l10n-brazil.git --branch 8.0 --depth 1 /mnt/extra-addons/l10n-brazil
 RUN git clone https://github.com/oca/account-fiscal-rule.git --branch 8.0 --depth 1 /mnt/extra-addons/account-fiscal-rule
 RUN git clone https://github.com/odoo-brazil/odoo-brazil-eletronic-documents.git --branch 8.0 --depth 1 /mnt/extra-addons/odoo-brazil-eletronic-documents
 RUN git clone https://github.com/OCA/server-tools --branch 8.0 --depth 1 /mnt/extra-addons/server-tools
+
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
 COPY ./openerp-server.conf /etc/odoo/
