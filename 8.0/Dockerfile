@@ -32,25 +32,11 @@ RUN set -x; \
 	    python-openssl \
 	    git
 
-#ENV LOCALES_DEF pt_BR.UTF-8 en_US.UTF-8
-
-#RUN apt-get update &&  \
-    #apt-get upgrade -y &&  \
-    #apt-get -o Dpkg::Options::='--force-confnew' install locales -y
-
-## Uncomment the necessary locales (LOCALES_DEF)
-
-#RUN set -- junk $LOCALES_DEF  \
-    #shift;  \
-    #for THE_LOCALE in $LOCALES_DEF; do  \
-        #set --  $(echo $THE_LOCALE  |  awk -F'.' '{ print $1, $2 }');  \
-        #INPUT_FILE=$1;  \
-        #CHARMAP_FILE=$2;  \
-        #localedef  --no-archive -c -i $INPUT_FILE -f $CHARMAP_FILE $THE_LOCALE;  \
-    #done ; \
-    #locale-gen
-
-#RUN echo "generated locales are:" && locale -a
+RUN apt-get update &&  \
+    apt-get upgrade -y &&  \
+    apt-get -o Dpkg::Options::='--force-confnew' install locales -y && \
+    locale-gen en_US en_US.UTF-8 pt_BR.UTF-8 && \
+    dpkg-reconfigure locales
 
 RUN pip install http://labs.libre-entreprise.org/frs/download.php/897/pyxmlsec-0.3.1.tar.gz
 RUN git clone https://github.com/Trust-Code/PySPED.git /tmp/pysped
