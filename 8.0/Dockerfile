@@ -1,6 +1,6 @@
 FROM debian:jessie
 MAINTAINER Odoo S.A. <info@odoo.com>
-
+ENV DEBIAN_FRONTEND noninteractive
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 RUN set -x; \
         apt-get update \
@@ -19,17 +19,61 @@ RUN set -x; \
         && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false npm \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
+# Install brazilian localization dependencies
+RUN set -x; \
+        apt-get update \
+        && apt-get install -y --no-install-recommends \
+            python-pip \
+            python-dev \
+	    libxml2-dev \
+	    libxmlsec1-dev \
+	    libjpeg-dev \ 
+            build-essential \
+	    python-openssl \
+	    git
+
+ENV LOCALES_DEF pt_BR.UTF-8 en_US.UTF-8
+
+RUN apt-get update &&  \
+    apt-get upgrade -y &&  \
+    DEBIAN_FRONTEND=noninteractive  \
+    apt-get -o Dpkg::Options::='--force-confnew' install locales -y
+
+# Comment out possible uncommented locales before proceeding.
+# Uncomment the necessary locales (LOCALES_DEF)
+
+RUN set -- junk $LOCALES_DEF  \
+    shift;  \
+    for THE_LOCALE in $LOCALES_DEF; do  \
+        set --  $(echo $THE_LOCALE  |  awk -F'.' '{ print $1, $2 }');  \
+        INPUT_FILE=$1;  \
+        CHARMAP_FILE=$2;  \
+        localedef  --no-archive -c -i $INPUT_FILE -f $CHARMAP_FILE $THE_LOCALE;  \
+    done ; \
+    locale-gen
+
+RUN echo "generated locales are:" && locale -a
+
+RUN pip install http://labs.libre-entreprise.org/frs/download.php/897/pyxmlsec-0.3.1.tar.gz
+RUN pip install 
+RUN git clone https://github.com/Trust-Code/PySPED.git /tmp/pysped
+WORKDIR /tmp/pysped
+RUN python setup.py install
 # Install Odoo
 ENV ODOO_VERSION 8.0
-ENV ODOO_RELEASE 20160726
+ENV ODOO_RELEASE latest
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo '6679fad48c761cf8587faa243afcfc17f5a9eb73 odoo.deb' | sha1sum -c - \
+        #&& echo '6679fad48c761cf8587faa243afcfc17f5a9eb73 odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
+RUN git clone https://github.com/oca/l10n-brazil.git --branch 8.0 --depth 1 /mnt/extra-addons/l10n-brazil
+RUN git clone https://github.com/oca/account-fiscal-rule.git --branch 8.0 --depth 1 /mnt/extra-addons/account-fiscal-rule
+RUN git clone https://github.com/odoo-brazil/odoo-brazil-eletronic-documents.git --branch 8.0 --depth 1 /mnt/extra-addons/odoo-brazil-eletronic-documents
+RUN git clone https://github.com/OCA/server-tools --branch 8.0 --depth 1 /mnt/extra-addons/server-tools
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
 COPY ./openerp-server.conf /etc/odoo/
