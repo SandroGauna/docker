@@ -51,7 +51,7 @@ RUN set -- junk $LOCALES_DEF  \
 RUN echo "generated locales are:" && locale -a
 
 RUN pip install http://labs.libre-entreprise.org/frs/download.php/897/pyxmlsec-0.3.1.tar.gz
-RUN git clone https://github.com/Trust-Code/PySPED.git /tmp/pysped
+RUN git clone https://github.com/odoo-brazil/PySPED.git /tmp/pysped
 WORKDIR /tmp/pysped
 RUN python setup.py install
 
