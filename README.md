@@ -17,4 +17,4 @@ Start a PostgreSQL server
 
 Start an Odoo instance
 --------
-`$ docker run -p 8069:8069 --name odoo --link db:db -t odoo`
+`$ docker run -p 8069:8069 --name odoo --link db:db -t joaopaulosouza/odoo-docker:8.0`
