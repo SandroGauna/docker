@@ -38,8 +38,6 @@ RUN apt-get update &&  \
     apt-get upgrade -y &&  \
     apt-get -o Dpkg::Options::='--force-confnew' install locales -y
 
-# Uncomment the necessary locales (LOCALES_DEF)
-
 RUN set -- junk $LOCALES_DEF  \
     shift;  \
     for THE_LOCALE in $LOCALES_DEF; do  \
@@ -54,7 +52,7 @@ RUN echo "generated locales are:" && locale -a
 
 ENV PYTHON_EGG_CACHE /tmp/.python-eggs
 RUN pip install http://labs.libre-entreprise.org/frs/download.php/897/pyxmlsec-0.3.1.tar.gz
-RUN git clone https://github.com/Trust-Code/PySPED.git /tmp/pysped
+RUN git clone https://github.com/odoo-brazil/PySPED.git /tmp/pysped
 WORKDIR /tmp/pysped
 RUN python setup.py install
 
