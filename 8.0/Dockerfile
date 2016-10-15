@@ -36,7 +36,6 @@ ENV LOCALES_DEF pt_BR.UTF-8 en_US.UTF-8
 
 RUN apt-get update &&  \
     apt-get upgrade -y &&  \
-    DEBIAN_FRONTEND=noninteractive  \
     apt-get -o Dpkg::Options::='--force-confnew' install locales -y
 
 # Comment out possible uncommented locales before proceeding.
@@ -55,7 +54,6 @@ RUN set -- junk $LOCALES_DEF  \
 RUN echo "generated locales are:" && locale -a
 
 RUN pip install http://labs.libre-entreprise.org/frs/download.php/897/pyxmlsec-0.3.1.tar.gz
-RUN pip install 
 RUN git clone https://github.com/Trust-Code/PySPED.git /tmp/pysped
 WORKDIR /tmp/pysped
 RUN python setup.py install
