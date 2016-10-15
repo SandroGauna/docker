@@ -1,5 +1,5 @@
 FROM debian:jessie
-MAINTAINER Odoo S.A. <info@odoo.com>
+MAINTAINER João Paulo de Souza <vibedigital@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 RUN set -x; \
