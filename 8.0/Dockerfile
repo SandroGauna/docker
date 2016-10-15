@@ -52,6 +52,7 @@ RUN set -- junk $LOCALES_DEF  \
 
 RUN echo "generated locales are:" && locale -a
 
+ENV PYTHON_EGG_CACHE /tmp/.python-eggs
 RUN pip install http://labs.libre-entreprise.org/frs/download.php/897/pyxmlsec-0.3.1.tar.gz
 RUN git clone https://github.com/Trust-Code/PySPED.git /tmp/pysped
 WORKDIR /tmp/pysped
@@ -69,10 +70,10 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
 #brazilian localization
-RUN git clone https://github.com/oca/l10n-brazil.git --branch 8.0 --depth 1 /mnt/extra-addons/l10n-brazil
-RUN git clone https://github.com/oca/account-fiscal-rule.git --branch 8.0 --depth 1 /mnt/extra-addons/account-fiscal-rule
-RUN git clone https://github.com/odoo-brazil/odoo-brazil-eletronic-documents.git --branch 8.0 --depth 1 /mnt/extra-addons/odoo-brazil-eletronic-documents
-RUN git clone https://github.com/OCA/server-tools --branch 8.0 --depth 1 /mnt/extra-addons/server-tools
+RUN git clone https://github.com/oca/l10n-brazil.git --branch 8.0 --depth 1 /mnt/addons/l10n-brazil
+RUN git clone https://github.com/oca/account-fiscal-rule.git --branch 8.0 --depth 1 /mnt/addons/account-fiscal-rule
+RUN git clone https://github.com/odoo-brazil/odoo-brazil-eletronic-documents.git --branch 8.0 --depth 1 /mnt/addons/odoo-brazil-eletronic-documents
+RUN git clone https://github.com/OCA/server-tools --branch 8.0 --depth 1 /mnt/addons/server-tools
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
