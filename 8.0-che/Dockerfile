@@ -33,6 +33,7 @@ RUN set -x; \
 	    python-openssl \
 	    git \
 	    sudo \
+	    sshd \
 	    unzip
 
 
