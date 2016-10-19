@@ -34,6 +34,7 @@ RUN set -x; \
 	    git \
 	    sudo \
 	    sshd \
+	    wget \
 	    unzip
 
 
