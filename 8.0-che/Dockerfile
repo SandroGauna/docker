@@ -2,8 +2,6 @@ FROM debian:jessie
 MAINTAINER João Paulo de Souza <vibedigital@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
-RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" -qO- "http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz" | sudo tar -zx -C /opt/
-ENV JAVA_HOME /opt/jdk1.8.0_45
 
 RUN set -x; \
         apt-get update \
@@ -37,6 +35,9 @@ RUN set -x; \
 	    sudo \
 	    unzip
 
+
+RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" -qO- "http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz" | sudo tar -zx -C /opt/
+ENV JAVA_HOME /opt/jdk1.8.0_45
 
 ENV LOCALES_DEF pt_BR.UTF-8 en_US.UTF-8
 
